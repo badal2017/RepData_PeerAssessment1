@@ -76,6 +76,7 @@
     paste("New Median: ", total_median2)
 
 ##R code to add a new variable for weekday
+
     library(ggplot2)
     activity_data2$date<-as.POSIXct(activity_data2$date)
     activity_data2$day <- weekdays(activity_data2$date)
