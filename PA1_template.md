@@ -1,14 +1,8 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    fig_caption: yes
-    keep_md: yes
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-
+ ###Reads the data
  
     temp <- tempfile()
     download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", temp, mode="wb")
