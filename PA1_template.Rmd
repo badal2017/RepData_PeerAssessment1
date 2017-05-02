@@ -10,10 +10,13 @@ output:
 ## Loading and preprocessing the data
 
  
-    temp <- tempfile()
+   
+```{r, echo=TRUE}
+ temp <- tempfile()
     download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", temp, mode="wb")
     unzip(temp, "activity.csv")
     activity_data <- read.table("activity.csv", sep=",", header=T)
+```
 
 
 ## What is mean total number of steps taken per day?
@@ -21,34 +24,48 @@ output:
    
     
 ### Histogram of the total number of steps taken each day
-    agg_data<-aggregate(activity_data$steps, list(activity_data$date),sum)
+
+
+```{r, echo=TRUE}
+ agg_data<-aggregate(activity_data$steps, list(activity_data$date),sum)
     names(agg_data)<- c("date","total_steps")
     agg_data$date<-as.POSIXct(agg_data$date)
     plot(agg_data$date,agg_data$total_steps,type = 'h', lwd=10,col="purple",xlab='Date', ylab='Total number of     steps', main = 'Total steps taken each day')
+    
+```
+
+   
    
 ##R code to calculate the mean and median of total no. of steps taken each day
 
-    mean_data<-aggregate(activity_data$steps,list(activity_data$date),mean)
+    
+   
+```{r, echo=TRUE}
+  mean_data<-aggregate(activity_data$steps,list(activity_data$date),mean)
     names(mean_data)<- c("date","mean_value")
     mean_data
     total_mean<-mean(agg_data$total_steps,na.rm = TRUE)
     total_mean
     total_median<- median(agg_data$total_steps,na.rm = TRUE)
     total_median
+```
 
 
 ## What is the average daily activity pattern?
 
 ##R code to plot a time series for 5-minute interval
   
-    activity_data_not_na<-activity_data[!(is.na(activity_data$steps)),]
-    interval_data<-aggregate(activity_data_not_na$steps,list(activity_data_not_na$interval),mean)
-    names(interval_data)<-c("interval","avg_steps")
-    plot(interval_data$interval,interval_data$avg_steps,type = 'l',xlab = "Interval",ylab = "Average Steps",       main = "Average Steps for 5-minute Interval", col="orange")
-    max_interval<-interval_data[which.max(interval_data$avg_steps),]
-    max_interval
+```{r, echo=TRUE}
+      activity_data_not_na<-activity_data[!(is.na(activity_data$steps)),]
+      interval_data<-aggregate(activity_data_not_na$steps,list(activity_data_not_na$interval),mean)
+      names(interval_data)<-c("interval","avg_steps")
+      plot(interval_data$interval,interval_data$avg_steps,type = 'l',xlab =  "Interval",ylab = "Average Steps",       main = "Average Steps for 5-minute Interval", col="orange")
+      max_interval<-interval_data[which.max(interval_data$avg_steps),]
+      max_interval
+```  
+  
 ## Imputing missing values
-
+```{r, echo=TRUE}
     total_missing_rows<-sum(is.na(activity_data))
     total_missing_rows
     activity_data2<-activity_data
@@ -56,16 +73,16 @@ output:
     mean_value<-tapply(activity_data_not_na$steps,activity_data_not_na$interval,mean,na.rm=TRUE,simplify = TRUE)
     activity_data2$steps[missing_data]<-mean_value[as.character(activity_data2$interval[missing_data])]
     sum(is.na(activity_data2))
-
+```
 ##R code to plot histogram on new dataset
-
+```{r, echo=TRUE}
     agg_data2<-aggregate(activity_data2$steps, list(activity_data2$date),sum)
     names(agg_data2)<- c("date","total_steps")
     agg_data2$date<-as.POSIXct(agg_data2$date)
     plot(agg_data2$date,agg_data2$total_steps,type = 'h', lwd=10,col="purple",xlab='Date', ylab='Total number of steps', main = 'Total steps taken each day')
-
+```
 ##R code to calculate the mean and median of total no. of steps taken each day on new dataset
-
+```{r, echo=TRUE}
     mean_data2<-aggregate(activity_data2$steps,list(activity_data2$date),mean)
     names(mean_data2)<- c("date","mean_value")
     mean_data2
@@ -73,15 +90,16 @@ output:
     total_mean2
     total_median2<- median(agg_data2$total_steps,na.rm = TRUE)
     total_median2
-
+```
 ##The new and old mean remains same but the new median incresed by 1.19
-
+```{r, echo=TRUE}
     paste("Old Mean: ", total_mean )
     paste("New Mean: ", total_mean2)
     paste("Old Median: ", total_median)
     paste("New Median: ", total_median2)
-
+```
 ##R code to add a new variable for weekday
+```{r, echo=TRUE}
     library(ggplot2)
     activity_data2$date<-as.POSIXct(activity_data2$date)
     activity_data2$day <- weekdays(activity_data2$date)
@@ -90,3 +108,4 @@ output:
     interval_data2<-aggregate(activity_data2$steps,list(activity_data2$interval,activity_data2$day_type),mean)
     names(interval_data2)<-c("interval","day_type","avg_steps")
     ggplot(interval_data2,aes(interval,avg_steps))+geom_line(col="navy blue")+facet_grid(.~day_type)+labs(x="Interval",y="Avg Steps",title="Avg steps on Weekday/weekend")
+```    
